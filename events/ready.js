@@ -9,7 +9,7 @@ module.exports = {
         console.debug('ready!');
 
         // Set bot status
-        const status = "/activate";
+        const status = "Sintax.Service";
         client.user.setStatus("online");
         client.user.setActivity(status, {
             type: "STREAMING",
