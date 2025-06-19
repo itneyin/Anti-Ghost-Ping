@@ -3,18 +3,17 @@ const fs = require('fs');
 const { Client, Collection, MessageEmbed } = require('discord.js');
 const Database = require('./config/Database');
 
-console.log('MONGO_URI:', process.env.MONGO_URI);
 if (!process.env.MONGO_URI) {
   console.error('❌ MongoDB URI missing! Please set MONGO_URI in your environment variables.');
+  process.exit(1);
+}
+
+if (!process.env.TOKEN) {
+  console.error('❌ Discord bot TOKEN is missing in environment variables!');
+  process.exit(1);
 }
 
 const db = new Database();
-db.connect().then(() => {
-  console.log('✅ Connected to MongoDB');
-}).catch(err => {
-  console.error('MongoDB connection error:', err);
-});
-
 const client = new Client({ 
   intents: [
     'GUILDS',
@@ -84,4 +83,10 @@ client.on('guildDelete', guild => {
   }
 });
 
-client.login(process.env.TOKEN);
+db.connect().then(() => {
+  console.log('✅ Connected to MongoDB');
+  client.login(process.env.TOKEN);
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1);
+});
