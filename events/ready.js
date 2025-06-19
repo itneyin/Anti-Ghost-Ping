@@ -17,10 +17,13 @@ module.exports = {
         });
 
         // Check that TOKEN environment variable is set
-        if (!process.env.TOKEN) {
-            console.error("❌ TOKEN environment variable is not defined.");
-            process.exit(1);
-        }
+if (!process.env.TOKEN) {
+    console.error("❌ TOKEN environment variable is not defined.");
+    console.error("Current environment variables:", process.env);
+    // Comment out process.exit to debug:
+    // process.exit(1);
+}
+
 
         const CLIENT_ID = client.user.id;
         const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
