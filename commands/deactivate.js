@@ -1,47 +1,49 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-const { Permissions } = require('discord.js')
-const Discord = require('discord.js')
-const Activate = require('../models/Activates')
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { Permissions } = require('discord.js');
+const Discord = require('discord.js');
+const Activate = require('../models/Activates');
+
 module.exports = {
   data: new SlashCommandBuilder()
-  .setName('deactivate')
-  .setDescription('Deactivate the ghost ping feature of the bot'),
+    .setName('deactivate')
+    .setDescription('Deactivate the ghost ping feature of the bot'),
+
   async execute(interaction) {
-    const insf_perms = new Discord.MessageEmbed()
-    .setColor('FF0000')
-    .setTitle(`**:x: Insufficient Permission!**`)
-    .setDescription(`You don't have permission to use this command.`)
+    const unauthorized = new Discord.MessageEmbed()
+      .setColor('FF0000')
+      .setTitle(`**:x: Unauthorized!**`)
+      .setDescription(`You are not authorized to use this command.`);
+
     const deactivated_embed = new Discord.MessageEmbed()
-    .setColor('FF0000')
-    .setTitle(`**Ghost Ping detection deactivated succesfully!**`)
-    .setDescription(`Now the bot will not detect any ghost pings in this server!`)
-    .setTimestamp()
-    .setThumbnail(interaction.client.user.displayAvatarURL())
+      .setColor('FF0000')
+      .setTitle(`**Ghost Ping detection deactivated successfully!**`)
+      .setDescription(`Now the bot will not detect any ghost pings in this server!`)
+      .setTimestamp()
+      .setThumbnail(interaction.client.user.displayAvatarURL());
+
     const db_fail = new Discord.MessageEmbed()
-    .setColor('FF0000')
-    .setTitle(`**:x: DataBase Error!**`)
-    .setDescription(`An error occurred in the database!`)
-    .setImage('https://media.discordapp.net/attachments/1079259438566883349/1080014089163649094/image.png')
-    const activated = await Activate.findOne({guild_id: interaction.guild.id,})
-    if(!interaction.member.permissions.has([Permissions.FLAGS.MANAGE_MASSAGES])){
-      interaction.reply({ embeds: [insf_perms] })
-      return
+      .setColor('FF0000')
+      .setTitle(`**:x: Database Error!**`)
+      .setDescription(`An error occurred in the database!`)
+      .setImage('https://media.discordapp.net/attachments/1079259438566883349/1080014089163649094/image.png');
+
+    // ✅ Restrict to specific user
+    if (interaction.user.id !== '901746391494316071') {
+      return interaction.reply({ embeds: [unauthorized], ephemeral: true });
     }
-    if(!activated){
-      interaction.reply(`${interaction.user} **>> Ghost ping detection isnt activated yet in this server!**`)
-      return
+
+    const activated = await Activate.findOne({ guild_id: interaction.guild.id });
+
+    if (!activated) {
+      return interaction.reply(`${interaction.user} **>> Ghost ping detection isn't activated yet in this server!**`);
     }
-    Activate.deleteOne({ guild_id: interaction.guild.id }, (err, settings) => {
-      if(err){
-        console.log(err)
-        interaction.reply({ embeds: [db_fail] })
-        return
+
+    Activate.deleteOne({ guild_id: interaction.guild.id }, (err, result) => {
+      if (err || result.deletedCount === 0) {
+        console.error(err || 'Nothing deleted');
+        return interaction.reply({ embeds: [db_fail] });
       }
-      if(!settings){
-        interaction.reply({ embeds: [db_fail] })
-        return
-      }
-      interaction.reply({ embeds: [deactivated_embed] })
-    })
+      return interaction.reply({ embeds: [deactivated_embed] });
+    });
   }
-}
+};
