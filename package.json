@@ -4,6 +4,7 @@
   "description": "ghost ping detector bot",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "npm test"
   },
   "author": "",
@@ -18,3 +19,4 @@
     "ms": "^2.1.3"
   }
 }
+
