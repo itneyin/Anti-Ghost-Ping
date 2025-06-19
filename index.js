@@ -68,4 +68,4 @@ client.on('guildDelete' , guild => {
         client.channels.cache.get('1079988516542496808').send({embeds: [embed]})	
     }
 })
-client.login(process.env.token)
+client.login(process.env.TOKEN)
