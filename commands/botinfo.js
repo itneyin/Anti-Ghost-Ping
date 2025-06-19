@@ -21,7 +21,7 @@ module.exports = {
         .setColor('FFFF00')
         .setThumbnail(interaction.client.user.displayAvatarURL())
         .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' )
-        .setDescription(`\n **Anti ghost ping has been awake for ${days}d, ${hours}h, ${minutes}m, ${seconds}s**`)
+        .setDescription(`\n **This Rat has been awake for ${days}d, ${hours}h, ${minutes}m, ${seconds}s**`)
         .addFields(
             {name: '\u200B', value: '\u200B' },
             {name: '🏠 Guilds', value: `\`\`\`yml\n${interaction.client.guilds.cache.size}\`\`\``, inline: true},
@@ -30,7 +30,7 @@ module.exports = {
             {name: '🏓 Ping', value: `\`\`\`yml\n${(interaction.client.ws.ping).toFixed(0)} ms\`\`\``, inline: true},
             {name: ':control_knobs: Library', value: `\`\`\`yml\ndiscord.js v${Discord.version}\`\`\``, inline: true},
             {name: ':computer: Node.js Version', value: `\`\`\`yml\n${process.version}\`\`\``, inline: true},
-            {name: 'Server', value: '[Click here](https://discord.gg/uJCX5yfuTf)', inline: true},
+            {name: 'Server', value: '[Click here](https://discord.gg/oakrp)', inline: true},
         )
         interaction.reply({ embeds: [embed] })
     }
